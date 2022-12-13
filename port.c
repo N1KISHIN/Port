@@ -4,38 +4,40 @@
 #include <math.h>
 #include <stdlib.h>
 
-struct xorshift32_state {
-    uint32_t a;
-};
 
-uint32_t xorshift32(struct xorshift32_state *state) {
-    uint32_t x = state->a;
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    return state->a = x;
-}
-int last_max = 0;
-struct xorshift32_state *global_state = NULL;
+// struct xorshift32_state {
+//     uint32_t a;
+// };
 
-float rnd(int max) {
-    if (global_state == NULL) {
-        global_state = malloc(sizeof(struct xorshift32_state));
-    }
-    if (max == 0) {
-        float value = global_state->a / (float)UINT32_MAX;
-        return last_max*value;
-    }
-    last_max = max;
-    global_state->a = xorshift32(global_state);
-    float value = global_state->a / (float)UINT32_MAX;
-    return value*max;
-}
+// uint32_t xorshift32(struct xorshift32_state *state) {
+//     uint32_t x = state->a;
+//     x ^= x << 13;
+//     x ^= x >> 17;
+//     x ^= x << 5;
+//     return state->a = x;
+// }
+// int last_max = 0;
+// struct xorshift32_state *global_state = NULL;
+
+// float rnd(int max) {
+//     if (global_state == NULL) {
+//         global_state = malloc(sizeof(struct xorshift32_state));
+//     }
+//     if (max == 0) {
+//         float value = global_state->a / (float)UINT32_MAX;
+//         return last_max*value;
+//     }
+//     last_max = max;
+//     global_state->a = xorshift32(global_state);
+//     float value = global_state->a / (float)UINT32_MAX;
+//     return value*max;
+// }
 
 
 
 int main(){
     int l;
+    int i = 0;
     int w;
     float g;
     float t;
@@ -46,20 +48,21 @@ int main(){
     int s[30][60];
 n30:
     l = 27;//(int)(60 * rnd(1)) + 1;
-    printf("l = %f\n",l);
     if (l == 60 || l == 1) goto n30;
     g = 4;//(int)(10 * rnd(1)) + 1;
-    printf("g = %f\n",g);
 n60:
-    printf("THE CUP IS 30 LINES DOWN AND %i", l);
+    if (i > 5) goto n600;
+    else {
+        i += 1;
+    printf("THE CUP IS 30 LINES DOWN AND %d", l);
     printf(" SPACES OVER. \n");
-    printf("THE PULL OF GRAVITY IS %i", g);
+    printf("THE PULL OF GRAVITY IS %f", g);
     printf(" LINES/SECOND/SECDND \n");
     printf("WHAT IS THE PUSH YOU WOULD LIKE TO GIVE THE BALL\n");
     printf(" ACROSS THE PAPER (IN SPACES/SECOND)\n");
     scanf("%f", &t);
     printf("THE RESULTS MAY TAKE ANYWHERE BETWEEN 30 AND 90 SECONDS.\n");
-    printf("g = %i\n", g);
+    printf("g = %f\n", g);
     for (int s1 = 0; s1 < 30; s1++){
         for (int s2 = 0; s2 < 60; s2++){
             s[s1][s2] = 0;
@@ -79,10 +82,10 @@ n60:
         if ((int)x+1 == 29 && (int)y+1 == l+1) goto n330;
         s[(int)x-1][(int)y-1] = 2;
         for (int d = 1; d <=5; d+= 1){
-            if ((int)y < 6) goto n290;
+            if ((int)y < 6) break;
             s[(int)x-1][(int)y-d-1] = 0;
         };    
-n290:
+
     }
 n300: 
     goto n340;
@@ -130,10 +133,14 @@ n500:
     printf("\n");
     if (w == 1) goto n570;
     if (w == 2) goto n590;
-    printf("YOU MISSED; TRY AGAIN.");
+    printf("YOU MISSED; TRY AGAIN.\n");
     goto n60;
 n570:
     printf("RIGHT IN!!!");
 n590:
     printf("YOU ALMOST DIDN'T MAKE IT, BUT IT BOUNCED IN.");
+
+n600:
+   printf("YOU LOSE!");
+}
 }
